@@ -62,6 +62,8 @@ class UserBloc {
 
 }
 
+// Correccion en falencias he instanciaciones
+const subscriptionBloc = new SubscriptionBloc();
 const userService = new UserService();
 const mailer = new Mailer();
 
@@ -69,3 +71,8 @@ const userBloc = new UserBloc(
     userService,
     mailer
 );
+
+subscriptionBloc.onAddSubscription(1234);
+userBloc.loadUser(10);
+userBloc.saveUser({id: 10, name: 'Moises'});
+userBloc.notifyUser();
