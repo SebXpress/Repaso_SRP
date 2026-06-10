@@ -21,10 +21,7 @@ class UserBloc {
         console.log('Enviando correo a los usuarios');
     }
 
-    onAddSubscription( subscriptionId: number ) {
-        // Simula la gestión de suscripciones
-        console.log('Agregando suscripción:', subscriptionId );
-    }
+    
 
 }
 
@@ -33,4 +30,15 @@ const userBloc = new UserBloc();
 userBloc.loadUser(10);
 userBloc.saveUser({ id: 10, name: 'Fernando' });
 userBloc.notifyUser();
-userBloc.onAddSubscription(1234);
+
+
+
+class SubscriptionBloc{
+    onAddSubscription( subscriptionId: number ) {
+        // Simula la gestión de suscripciones
+        console.log('Agregando suscripción:', subscriptionId );
+    }
+}
+
+const subscriptionBloc = new SubscriptionBloc();
+subscriptionBloc.onAddSubscription(1234);
