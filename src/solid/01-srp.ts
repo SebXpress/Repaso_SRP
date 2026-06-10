@@ -3,18 +3,6 @@ interface User {
     name: string;
 }
 
-// Esta clase viola el Principio de Responsabilidad Única (SRP)
-class UserBloc {
-    notifyUser() {
-        // Simula el envío de notificaciones
-        console.log('Enviando correo a los usuarios');
-    }
-}
-
-const userBloc = new UserBloc();
-userBloc.notifyUser();
-
-
 // Paso 1: Identificar que onAddSubscription no tiene relación directa con UserBloc.
 // Extraer este método a una nueva clase independiente llamada SubscriptionBloc e instanciarla.
 class SubscriptionBloc{
@@ -23,9 +11,6 @@ class SubscriptionBloc{
         console.log('Agregando suscripción:', subscriptionId );
     }
 }
-
-const subscriptionBloc = new SubscriptionBloc();
-subscriptionBloc.onAddSubscription(1234);
 
 // Paso 2: Identificar que cargar y guardar interactúan con la base de datos/API. 
 // Extraer loadUser y saveUser a una nueva clase UserService.
@@ -41,9 +26,6 @@ class UserService{
     }
 }
 
-const useService = new UserService ();
-useService.loadUser(10);
-useService.saveUser({ id: 10, name: 'Fernando' });
 
 //Paso 3: Identificar que notificar al usuario pertenece a otra capa. 
 //Extraer la lógica de correo a una nueva clase genérica Mailer con un método sendEmail.
@@ -53,3 +35,37 @@ class Mailer{
         console.log('Enviando correo a los usuarios.');
     }
 }
+
+//Paso 4: UserBloc aún necesita coordinar el proceso. 
+//Refactorizar el constructor de UserBloc para aplicar inyección de dependencias, 
+// recibiendo UserService y Mailer como parámetros, permitiendo llamar a estos servicios 
+// dentro de los métodos originales de UserBloc (ej. this.userService.getUser(id).
+class UserBloc {
+    
+    constructor (
+        private userService:UserService,
+        private mailer:Mailer
+    ) {}
+
+    loadUser(id:number){
+        this.userService.loadUser(id);
+    }
+
+    saveUser(user: User){
+        this.userService.saveUser(user);
+    }
+
+
+    notifyUser() {
+        this.mailer.sendEmail();
+    }
+
+}
+
+const userService = new UserService();
+const mailer = new Mailer();
+
+const userBloc = new UserBloc(
+    userService,
+    mailer
+);
