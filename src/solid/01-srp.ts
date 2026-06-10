@@ -44,3 +44,12 @@ class UserService{
 const useService = new UserService ();
 useService.loadUser(10);
 useService.saveUser({ id: 10, name: 'Fernando' });
+
+//Paso 3: Identificar que notificar al usuario pertenece a otra capa. 
+//Extraer la lógica de correo a una nueva clase genérica Mailer con un método sendEmail.
+class Mailer{
+    sendEmail(){
+        // Simula el envio a los correos
+        console.log('Enviando correo a los usuarios.');
+    }
+}
